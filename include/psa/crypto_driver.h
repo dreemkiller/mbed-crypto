@@ -39,7 +39,8 @@ extern "C" {
  * It is intended that these will be moved to a new common header file to
  * avoid duplication. They are included here for expediency in publication.
  */
-typedef uint32_t psa_status_t;
+#ifndef PSA_CRYPTO_H
+typedef int32_t psa_status_t;
 typedef uint32_t psa_algorithm_t;
 typedef uint8_t psa_encrypt_or_decrypt_t;
 typedef uint32_t psa_key_slot_t;
@@ -48,7 +49,7 @@ typedef uint32_t psa_key_usage_t;
 
 #define PSA_CRYPTO_DRIVER_ENCRYPT 1
 #define PSA_CRYPTO_DRIVER_DECRYPT 0
-
+#endif
 /** \defgroup opaque_mac Opaque Message Authentication Code
  * Generation and authentication of Message Authentication Codes (MACs) using
  * opaque keys can be done either as a single function call (via the
@@ -217,25 +218,25 @@ typedef struct {
     size_t                              context_size;
     /** Function that performs the setup operation
      */
-    psa_drv_mac_opaque_setup_t          *p_setup;
+    psa_drv_mac_opaque_setup_t          p_setup;
     /** Function that performs the update operation
      */
-    psa_drv_mac_opaque_update_t         *p_update;
+    psa_drv_mac_opaque_update_t         p_update;
     /** Function that completes the operation
      */
-    psa_drv_mac_opaque_finish_t         *p_finish;
+    psa_drv_mac_opaque_finish_t         p_finish;
     /** Function that completed a MAC operation with a verify check
      */
-    psa_drv_mac_opaque_finish_verify_t  *p_finish_verify;
+    psa_drv_mac_opaque_finish_verify_t  p_finish_verify;
     /** Function that aborts a previoustly started operation
      */
-    psa_drv_mac_opaque_abort_t          *p_abort;
+    psa_drv_mac_opaque_abort_t          p_abort;
     /** Function that performs the MAC operation in one call
      */
-    psa_drv_mac_opaque_generate_t       *p_mac;
+    psa_drv_mac_opaque_generate_t       p_mac;
     /** Function that performs the MAC and verify operation in one call
      */
-    psa_drv_mac_opaque_verify_t         *p_mac_verify;
+    psa_drv_mac_opaque_verify_t         p_mac_verify;
 } psa_drv_mac_opaque_t;
 /**@}*/
 
@@ -600,20 +601,20 @@ typedef struct {
      */
     size_t                         size;
     /** Function that performs the setup operation */
-    psa_drv_cipher_opaque_setup_t  *p_setup;
+    psa_drv_cipher_opaque_setup_t  p_setup;
     /** Function that sets the IV (if necessary) */
-    psa_drv_cipher_opaque_set_iv_t *p_set_iv;
+    psa_drv_cipher_opaque_set_iv_t p_set_iv;
     /** Function that performs the update operation */
-    psa_drv_cipher_opaque_update_t *p_update;
+    psa_drv_cipher_opaque_update_t p_update;
     /** Function that completes the operation */
-    psa_drv_cipher_opaque_finish_t *p_finish;
+    psa_drv_cipher_opaque_finish_t p_finish;
     /** Function that aborts the operation */
-    psa_drv_cipher_opaque_abort_t  *p_abort;
+    psa_drv_cipher_opaque_abort_t  p_abort;
     /** Function that performs ECB mode for the cipher
      * (Danger: ECB mode should not be used directly by clients of the PSA
      * Crypto Client API)
      */
-    psa_drv_cipher_opaque_ecb_t    *p_ecb;
+    psa_drv_cipher_opaque_ecb_t    p_ecb;
 } psa_drv_cipher_opaque_t;
 
 /**@}*/
@@ -1022,13 +1023,13 @@ typedef psa_status_t (*psa_drv_asymmetric_opaque_decrypt_t)(psa_key_slot_t key_s
  */
 typedef struct {
     /** Function that performs the asymmetric sign operation */
-    psa_drv_asymmetric_opaque_sign_t    *p_sign;
+    psa_drv_asymmetric_opaque_sign_t    p_sign;
     /** Function that performs the asymmetric verify operation */
-    psa_drv_asymmetric_opaque_verify_t  *p_verify;
+    psa_drv_asymmetric_opaque_verify_t  p_verify;
     /** Function that performs the asymmetric encrypt operation */
-    psa_drv_asymmetric_opaque_encrypt_t *p_encrypt;
+    psa_drv_asymmetric_opaque_encrypt_t p_encrypt;
     /** Function that performs the asymmetric decrypt operation */
-    psa_drv_asymmetric_opaque_decrypt_t *p_decrypt;
+    psa_drv_asymmetric_opaque_decrypt_t p_decrypt;
 } psa_drv_asymmetric_opaque_t;
 
 /**@}*/
@@ -1304,9 +1305,9 @@ typedef psa_status_t (*psa_drv_aead_opaque_decrypt_t)(psa_key_slot_t key_slot,
  */
 typedef struct {
     /** Function that performs the AEAD encrypt operation */
-    psa_drv_aead_opaque_encrypt_t *p_encrypt;
+    psa_drv_aead_opaque_encrypt_t p_encrypt;
     /** Function that performs the AEAD decrypt operation */
-    psa_drv_aead_opaque_decrypt_t *p_decrypt;
+    psa_drv_aead_opaque_decrypt_t p_decrypt;
 } psa_drv_aead_opaque_t;
 /**@}*/
 
@@ -1489,10 +1490,10 @@ typedef psa_status_t (*psa_drv_entropy_get_bits_t)(psa_drv_entropy_context_t *p_
  */
 typedef struct {
     /** Function that performs initialization for the entropy source */
-    psa_drv_entropy_init_t *p_init;
+    psa_drv_entropy_init_t p_init;
     /** Function that performs the get_bits operation for the entropy source
     */
-    psa_drv_entropy_get_bits_t *p_get_bits;
+    psa_drv_entropy_get_bits_t p_get_bits;
 } psa_drv_entropy_t;
 /**@}*/
 
@@ -1628,13 +1629,13 @@ typedef psa_status_t (*psa_drv_export_public_key_t)(psa_key_slot_t key,
  */
 typedef struct {
     /** Function that performs the key import operation */
-    psa_drv_opaque_import_key_t *p_import;
+    psa_drv_opaque_import_key_t p_import;
     /** Function that performs the key destroy operation */
-    psa_drv_destroy_key_t       *p_destroy;
+    psa_drv_destroy_key_t       p_destroy;
     /** Function that performs the key export operation */
-    psa_drv_export_key_t        *p_export;
+    psa_drv_export_key_t        p_export;
     /** Function that perforsm the public key export operation */
-    psa_drv_export_public_key_t *p_export_public;
+    psa_drv_export_public_key_t p_export_public;
 } psa_drv_key_management_t;
 
 /**@}*/
@@ -1768,14 +1769,14 @@ typedef psa_status_t (*psa_drv_key_derivation_export_t)(uint8_t *p_output,
  */
 typedef struct {
     /** Function that performs the key derivation setup */
-    psa_drv_key_derivation_setup_t      *p_setup;
+    psa_drv_key_derivation_setup_t      p_setup;
     /** Function that sets the key derivation collateral */
-    psa_drv_key_derivation_collateral_t *p_collateral;
+    psa_drv_key_derivation_collateral_t p_collateral;
     /** Function that performs the final key derivation step */
-    psa_drv_key_derivation_derive_t     *p_derive;
+    psa_drv_key_derivation_derive_t     p_derive;
     /** Function that perforsm the final key derivation or agreement and
      * exports the key */
-    psa_drv_key_derivation_export_t     *p_export;
+    psa_drv_key_derivation_export_t     p_export;
 } psa_drv_key_derivation_t;
 
 /**@}*/

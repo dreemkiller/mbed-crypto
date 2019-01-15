@@ -26,6 +26,7 @@
 #endif
 
 #if defined(MBEDTLS_PSA_CRYPTO_C)
+
 /*
  * In case MBEDTLS_PSA_CRYPTO_SPM is defined the code is built for SPM (Secure
  * Partition Manager) integration which separate the code into two parts

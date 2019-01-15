@@ -1,7 +1,5 @@
-/*
- *  Windows CE console application entry point
- *
- *  Copyright (C) 2006-2015, ARM Limited, All Rights Reserved
+/**
+ *  Copyright (C) 2006-2016, ARM Limited, All Rights Reserved
  *  SPDX-License-Identifier: Apache-2.0
  *
  *  Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -18,28 +16,19 @@
  *
  *  This file is part of mbed TLS (https://tls.mbed.org)
  */
+#define DEVICE_TRNG 1
+#if DEVICE_TRNG
+#define MBEDTLS_ENTROPY_HARDWARE_ALT
+#endif
 
-#if defined(_WIN32_WCE)
+#if defined(MBEDTLS_CONFIG_HW_SUPPORT)
+#include "mbedtls_device.h"
+#endif
 
-#include <windows.h>
+/*
+ * MBEDTLS_ERR_PLATFORM_HW_FAILED is deprecated and should not be used.
+ */
+#define MBEDTLS_ERR_PLATFORM_HW_FAILED       -0x0080
 
-extern int main( int, const char ** );
+#define MBEDTLS_ERR_PLATFORM_HW_ACCEL_FAILED -0x0070
 
-int _tmain( int argc, _TCHAR* targv[] )
-{
-    char **argv;
-    int i;
-
-    argv = ( char ** ) calloc( argc, sizeof( char * ) );
-
-    for ( i = 0; i < argc; i++ ) {
-        size_t len;
-        len = _tcslen( targv[i] ) + 1;
-        argv[i] = ( char * ) calloc( len, sizeof( char ) );
-        wcstombs( argv[i], targv[i], len );
-    }
-
-    return main( argc, argv );
-}
-
-#endif  /* defined(_WIN32_WCE) */
